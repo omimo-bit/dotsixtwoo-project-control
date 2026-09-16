@@ -1,2 +1,0 @@
-var APP={SPREADSHEET_ID:'PASTE_SPREADSHEET_ID',SESSION_HOURS:12};
-function db_(){return SpreadsheetApp.openById(APP.SPREADSHEET_ID)}
