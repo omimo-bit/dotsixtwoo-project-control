@@ -1,1 +1,0 @@
-function createMeeting_(p,user){var project=getById_('PROJECTS','projectId',p.projectId);if(project)p.projectName=project.projectName;p.status=p.status||'Scheduled';p.momStatus='Pending';var m=createEntity_('MEETINGS','meetingId','M',p,user);log_(user,'CREATE','MEETING',m.meetingId,'Meeting created; MOM pending');return m}
