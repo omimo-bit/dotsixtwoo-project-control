@@ -1,0 +1,3 @@
+function calcBudget_(b){var a=Number(b.approvedQuotation||0),p=Number(b.plannedCosting||0),x=Number(b.actualCosting||0),usage=a?x/a*100:0;b.remainingBudget=a-x;b.variance=p-x;b.estimatedProfit=a-x;b.marginPercent=a?(a-x)/a*100:0;b.budgetUsagePercent=usage;b.budgetStatus=usage>=100?'OVER BUDGET':usage>=90?'ALERT':usage>=75?'WATCH':'SAFE';return b}
+function getBudget_(){return listRows_('BUDGET').map(calcBudget_)}
+function updateBudget_(p,user){var found=getById_('BUDGET','projectId',p.projectId);p=calcBudget_(p);if(found){p.budgetId=found.budgetId;return updateEntity_('BUDGET','budgetId',p,user)}var pr=getById_('PROJECTS','projectId',p.projectId);p.projectName=pr?pr.projectName:p.projectName;return createEntity_('BUDGET','budgetId','B',p,user)}

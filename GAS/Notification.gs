@@ -1,0 +1,1 @@
+function notify_(userId,type,title,message,recordId){return append_('NOTIFICATIONS',{notificationId:nextId_('N'),userId:userId,type:type,title:title,message:message,recordId:recordId,createdAt:new Date(),readAt:'',deliveryStatus:'IN_APP'})}
