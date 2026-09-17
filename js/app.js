@@ -11,7 +11,7 @@ const fmtTime=v=>timeKey(v)||'-';
 const fmtMoney=v=>'Rp '+Number(v||0).toLocaleString('id-ID');
 const isOverdue=t=>t.deadline&&t.status!=='Completed'&&dateKey(t.deadline)<todayKey();
 const roleUpper=()=>String(state.user?.role||'').toUpperCase();
-const canManage=()=>['PM','ADMIN','LEADER','OWNER','CEO'].some(r=>roleUpper().includes(r));
+const canManage=()=>['PM','ADMIN','LEADER','OWNER','CEO','Talent Support','Talent Support','Business Unit Admin'].some(r=>roleUpper().includes(r));
 const canAdmin=()=>['ADMIN','LEADER','OWNER','CEO'].some(r=>roleUpper().includes(r));
 function toast(msg){const el=$('#toast');el.textContent=msg;el.classList.remove('hidden');clearTimeout(window.__toast);window.__toast=setTimeout(()=>el.classList.add('hidden'),2200)}
 function empty(t){return `<div class="empty"><span class="muted">${esc(t)}</span></div>`}
