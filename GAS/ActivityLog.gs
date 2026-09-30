@@ -1,1 +1,0 @@
-function log_(user,action,module,recordId,description){append_('ACTIVITY_LOG',{logId:nextId_('LOG'),timestamp:new Date(),userId:user.userId||'',userName:user.name||'',action:action,module:module,recordId:recordId,description:description})}
