@@ -40,15 +40,17 @@ function playRingtone(){
 function showSystemNotification(n){
   try{
     if(!n||!('Notification' in window)||Notification.permission!=='granted')return;
-    if(navigator.serviceWorker?.ready)navigator.serviceWorker.ready.then(reg=>reg.showNotification(n.title||'DOTSIXTWOO',{body:n.message||'',icon:'./assets/icons/icon-192.png',badge:'./assets/icons/icon-192.png',tag:n.notificationId||String(Date.now())})).catch(()=>{});
+    const type=String(n.type||'').toUpperCase(),route=type.includes('TASK')?'tasks':((type.includes('MEETING')||type.includes('MOM')||type.includes('CALENDAR'))?'meetings':(type.includes('BUDGET')?'budget':(type.includes('PROJECT')?'projects':'notifications')));
+    if(navigator.serviceWorker?.ready)navigator.serviceWorker.ready.then(reg=>reg.showNotification(n.title||'DOTSIXTWOO',{body:n.message||'',icon:'./assets/icons/icon-192.png',badge:'./assets/icons/icon-192.png',tag:n.notificationId||String(Date.now()),renotify:true,silent:false,data:{route,recordId:n.recordId||'',notificationId:n.notificationId||''}})).catch(()=>{});
   }catch(e){}
 }
 function processIncomingNotifications(list,{silent=false}={}){
   const incoming=Array.isArray(list)?list:[];
   if(!__notificationsReady){__notifIds=new Set(incoming.map(n=>String(n.notificationId)));__notificationsReady=true;return}
-  const fresh=incoming.filter(n=>!__notifIds.has(String(n.notificationId)));
+  const pushSeen=window.__d2PushSeen||new Set();
+  const fresh=incoming.filter(n=>!__notifIds.has(String(n.notificationId))&&!pushSeen.has(String(n.notificationId)));
   incoming.forEach(n=>__notifIds.add(String(n.notificationId)));
-  if(fresh.length&&!silent){playRingtone();showSystemNotification(fresh[0]);toast(fresh.length===1?(fresh[0].title||'Update baru'):`${fresh.length} update baru`)}
+  if(fresh.length&&!silent){if(!(window.PushLayer&&PushLayer.isEnabled&&PushLayer.isEnabled()))playRingtone();showSystemNotification(fresh[0]);toast(fresh.length===1?(fresh[0].title||'Update baru'):`${fresh.length} update baru`)}
 }
 function startNotificationPolling(){
   clearInterval(__notifTimer);
