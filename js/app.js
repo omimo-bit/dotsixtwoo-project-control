@@ -1,5 +1,5 @@
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const state={user:null,dashboard:null,projects:[],tasks:[],allTasks:[],meetings:[],budget:[],notifications:[],daily:[],users:[],alfaSchedule:[],workload:[],selectedProject:null,selectedWorkload:null,projectFilter:'All',taskFilter:'All',meetingFilter:'All',scheduleFilter:'Today',workloadFilter:'All'};
+const state={user:null,dashboard:null,projects:[],tasks:[],allTasks:[],meetings:[],budget:[],notifications:[],daily:[],users:[],alfaSchedule:[],workload:[],selectedProject:null,selectedWorkload:null,projectFilter:'All',taskFilter:'All',meetingFilter:'All',scheduleFilter:'Today',scheduleMonth:null,scheduleSelectedDate:null,workloadFilter:'All'};
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const pad2=n=>String(n).padStart(2,'0');
 const localDateKey=d=>`${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
@@ -139,7 +139,50 @@ function renderDaily(){$('#dailyList').innerHTML=state.daily.slice().reverse().s
 async function renderNotifications(){if(!state.user)return;$('#notificationList').innerHTML=state.notifications.map(n=>`<div class="card ${!n.readAt?'attn':''}"><div class="row"><strong>${esc(n.title)}</strong><span class="badge">${esc(n.type)}</span></div><p>${esc(n.message)}</p><div class="card-actions"><button class="btn small" data-read-notif="${esc(n.notificationId)}">Tandai dibaca</button></div></div>`).join('')||empty('Tidak ada notifikasi baru.');$$('[data-read-notif]').forEach(b=>b.onclick=async()=>{await API.call('markNotificationRead',{notificationId:b.dataset.readNotif});state.notifications=await API.call('getNotifications');renderNotifications();$('#notifCount').textContent=state.notifications.length})}
 async function renderActivity(){if(!state.user)return;try{const a=await API.call('getActivityLog');$('#activityList').innerHTML=a.slice(0,100).map(x=>`<div class="card"><div class="row"><strong>${esc(x.userName||x.user)}</strong><span class="badge">${esc(x.action)}</span></div><div>${esc(x.description)}</div><span class="muted">${esc(x.timestamp)}</span></div>`).join('')||empty('Belum ada activity.')}catch(e){$('#activityList').innerHTML=empty('Activity belum bisa dimuat.')}}
 function inScheduleRange(m,filter){const d=dateKey(m.date),t=todayKey();if(filter==='Today')return d===t;const base=new Date();if(filter==='Tomorrow'){base.setDate(base.getDate()+1);return d===localDateKey(base)}if(filter==='This Week'){const end=new Date();end.setDate(end.getDate()+7);return d>=t&&d<=localDateKey(end)}return true}
-function renderSchedule(){const fs=['Today','Tomorrow','This Week'];$('#scheduleFilters').innerHTML=fs.map(x=>`<button class="chip ${state.scheduleFilter===x?'active':''}" data-schedule-filter="${x}">${x}</button>`).join('');$$('[data-schedule-filter]').forEach(b=>b.onclick=()=>{state.scheduleFilter=b.dataset.scheduleFilter;renderSchedule()});const a=(state.alfaSchedule||[]).filter(m=>inScheduleRange(m,state.scheduleFilter)).sort(sortMeeting);$('#scheduleList').innerHTML=a.map(meetingCard).join('')||empty('Tidak ada jadwal Pak Alfa.')}
+function monthKeyFromDateKey(key){const d=dateKey(key)||todayKey();return `${d.slice(0,7)}-01`}
+function shiftMonthKey(key,delta){const base=dateKey(key)||todayKey(),y=Number(base.slice(0,4)),m=Number(base.slice(5,7));return localDateKey(new Date(y,m-1+delta,1))}
+function monthLabel(key){const d=dateKey(key)||todayKey(),y=Number(d.slice(0,4)),m=Number(d.slice(5,7));return new Date(y,m-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'})}
+function longDateLabel(key){const d=dateKey(key)||todayKey(),y=Number(d.slice(0,4)),m=Number(d.slice(5,7)),day=Number(d.slice(8,10));return new Date(y,m-1,day).toLocaleDateString('id-ID',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})}
+function renderSchedule(){
+  const schedule=(state.alfaSchedule||[]).filter(m=>String(m.status||'')!=='Cancelled').sort(sortMeeting);
+  if(!state.scheduleMonth)state.scheduleMonth=monthKeyFromDateKey(todayKey());
+  if(!state.scheduleSelectedDate)state.scheduleSelectedDate=todayKey();
+
+  const monthKey=monthKeyFromDateKey(state.scheduleMonth),y=Number(monthKey.slice(0,4)),m=Number(monthKey.slice(5,7));
+  const first=new Date(y,m-1,1),daysInMonth=new Date(y,m,0).getDate(),offset=(first.getDay()+6)%7;
+  const total=Math.max(35,Math.ceil((offset+daysInMonth)/7)*7),gridStart=new Date(y,m-1,1-offset);
+  const byDate={};schedule.forEach(item=>{const k=dateKey(item.date);if(!k)return;(byDate[k]||(byDate[k]=[])).push(item)});
+  Object.keys(byDate).forEach(k=>byDate[k].sort(sortMeeting));
+
+  const monthMeetings=schedule.filter(item=>dateKey(item.date).slice(0,7)===monthKey.slice(0,7));
+  const monthLabelEl=$('#scheduleMonthLabel'),monthMetaEl=$('#scheduleMonthMeta');
+  if(monthLabelEl)monthLabelEl.textContent=monthLabel(monthKey);
+  if(monthMetaEl)monthMetaEl.textContent=`${monthMeetings.length} agenda · ${new Set(monthMeetings.map(x=>dateKey(x.date))).size} hari terisi`;
+
+  const cells=[];
+  for(let i=0;i<total;i++){
+    const d=new Date(gridStart);d.setDate(gridStart.getDate()+i);
+    const key=localDateKey(d),inMonth=d.getMonth()===(m-1),isToday=key===todayKey(),selected=key===state.scheduleSelectedDate,items=byDate[key]||[];
+    const events=items.slice(0,3).map(item=>`<button class="calendar-event" type="button" data-calendar-event="${esc(item.meetingId)}" data-calendar-event-date="${esc(key)}" title="${esc(`${fmtTime(item.startTime)} ${item.title}`)}"><span class="calendar-event-time">${esc(fmtTime(item.startTime))}</span><span class="calendar-event-title">${esc(item.title)}</span></button>`).join('');
+    const more=items.length>3?`<button class="calendar-more" type="button" data-calendar-date-button="${esc(key)}">+${items.length-3} agenda</button>`:'';
+    cells.push(`<div class="calendar-day ${inMonth?'':'outside-month'} ${isToday?'is-today':''} ${selected?'is-selected':''} ${items.length?'has-events':''}" role="gridcell" aria-selected="${selected?'true':'false'}"><button type="button" class="calendar-date-button" data-calendar-date-button="${esc(key)}" aria-label="${esc(longDateLabel(key))}"><span>${d.getDate()}</span>${items.length?`<b>${items.length}</b>`:''}</button><div class="calendar-events">${events}${more}</div></div>`);
+  }
+  const cal=$('#scheduleCalendar');if(cal)cal.innerHTML=cells.join('');
+
+  const selectedItems=(byDate[state.scheduleSelectedDate]||[]).sort(sortMeeting);
+  const dayTitle=$('#scheduleDayTitle'),dayCount=$('#scheduleDayCount'),dayAgenda=$('#scheduleDayAgenda');
+  if(dayTitle)dayTitle.textContent=longDateLabel(state.scheduleSelectedDate);
+  if(dayCount)dayCount.textContent=selectedItems.length;
+  if(dayAgenda)dayAgenda.innerHTML=selectedItems.map(meetingCard).join('')||empty('Tidak ada agenda Pak Alfa di tanggal ini.');
+
+  const prev=$('#schedulePrevMonth'),next=$('#scheduleNextMonth'),today=$('#scheduleToday');
+  if(prev)prev.onclick=()=>{state.scheduleMonth=shiftMonthKey(monthKey,-1);state.scheduleSelectedDate=state.scheduleMonth;renderSchedule()};
+  if(next)next.onclick=()=>{state.scheduleMonth=shiftMonthKey(monthKey,1);state.scheduleSelectedDate=state.scheduleMonth;renderSchedule()};
+  if(today)today.onclick=()=>{state.scheduleMonth=monthKeyFromDateKey(todayKey());state.scheduleSelectedDate=todayKey();renderSchedule()};
+  $$('[data-calendar-date-button]').forEach(b=>b.onclick=()=>{state.scheduleSelectedDate=b.dataset.calendarDateButton;const pickedMonth=monthKeyFromDateKey(state.scheduleSelectedDate);if(pickedMonth!==monthKey)state.scheduleMonth=pickedMonth;renderSchedule()});
+  $$('[data-calendar-event]').forEach(b=>b.onclick=e=>{e.stopPropagation();state.scheduleSelectedDate=b.dataset.calendarEventDate;renderSchedule();setTimeout(()=>$('#scheduleDayAgenda')?.scrollIntoView({behavior:'smooth',block:'start'}),0)});
+  bindDynamicActions();
+}
 
 function workloadStatusLabel(w){
   if(Number(w.blocked||0)>0)return 'BLOCKED';

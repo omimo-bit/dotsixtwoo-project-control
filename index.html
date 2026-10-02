@@ -22,6 +22,7 @@
         <div class="auth-brand">
           <img src="assets/logo.png" alt="DOTSIXTWOO" class="login-logo">
           <div class="auth-brand-copy">
+            <span class="eyebrow">DOTSIXTWOO</span>
             <h1>Project Control<br>Center</h1>
             <p>Satu sumber informasi untuk project, task, meeting, MOM, schedule, dan budget.</p>
           </div>
@@ -178,7 +179,47 @@
           <section data-page="activity" class="page"><div class="page-head"><div><span class="eyebrow">AUDIT TRAIL</span><h1>Activity Log</h1></div><button class="btn" data-go="more">Kembali</button></div><div id="activityList" class="activity-stream"></div></section>
           <section data-page="workload" class="page"><div class="page-head"><div><span class="eyebrow">TEAM CONTROL</span><h1>Workload</h1><p class="muted">Task aktif, overdue, dan blocked per personal.</p></div><button class="btn" data-go="more">Kembali</button></div><div id="workloadSummary" class="metric-strip compact-metrics"></div><div class="filter-bar"><div class="chips" id="workloadFilters"></div><input id="workloadSearch" class="search" placeholder="Cari nama / role..."></div><div id="workloadList" class="workload-grid"></div></section>
           <section data-page="workloadDetail" class="page"><div class="page-head compact-page-head"><button class="btn" data-go="workload">← Workload</button></div><div id="workloadDetail"></div></section>
-          <section data-page="schedule" class="page"><div class="page-head"><div><span class="eyebrow">EXECUTIVE CALENDAR</span><h1>Alfa's Schedule</h1><p class="muted">Agenda yang membutuhkan Pak Alfa.</p></div><button class="btn" data-go="more">Kembali</button></div><div class="chips sticky-chips" id="scheduleFilters"></div><div id="scheduleList" class="meeting-agenda"></div></section>
+          <section data-page="schedule" class="page">
+            <div class="page-head">
+              <div>
+                <span class="eyebrow">EXECUTIVE CALENDAR</span>
+                <h1>Alfa's Schedule</h1>
+                <p class="muted">Kalender agenda yang membutuhkan Pak Alfa.</p>
+              </div>
+              <button class="btn" data-go="more">Kembali</button>
+            </div>
+
+            <section class="executive-calendar">
+              <div class="calendar-toolbar">
+                <div>
+                  <span class="eyebrow">MONTH VIEW</span>
+                  <h2 id="scheduleMonthLabel">Calendar</h2>
+                  <p id="scheduleMonthMeta" class="muted calendar-month-meta"></p>
+                </div>
+                <div class="calendar-nav" aria-label="Navigasi kalender">
+                  <button id="schedulePrevMonth" class="btn ghost calendar-nav-btn" type="button" aria-label="Bulan sebelumnya">←</button>
+                  <button id="scheduleToday" class="btn calendar-today-btn" type="button">Hari ini</button>
+                  <button id="scheduleNextMonth" class="btn ghost calendar-nav-btn" type="button" aria-label="Bulan berikutnya">→</button>
+                </div>
+              </div>
+
+              <div class="calendar-weekdays" aria-hidden="true">
+                <span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span><span>Min</span>
+              </div>
+              <div id="scheduleCalendar" class="calendar-grid" role="grid" aria-label="Executive calendar"></div>
+            </section>
+
+            <section class="calendar-day-panel">
+              <div class="panel-head">
+                <div>
+                  <span class="eyebrow">SELECTED DAY</span>
+                  <h2 id="scheduleDayTitle">Agenda</h2>
+                </div>
+                <span id="scheduleDayCount" class="counter-badge">0</span>
+              </div>
+              <div id="scheduleDayAgenda" class="meeting-agenda"></div>
+            </section>
+          </section>
           <section data-page="users" class="page"><div class="page-head"><div><span class="eyebrow">ACCESS CONTROL</span><h1>Users</h1></div><button id="newUserBtn" class="btn primary">+ User</button></div><div id="userList" class="user-grid"></div></section>
         </main>
       </div>
