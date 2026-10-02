@@ -420,3 +420,49 @@ menu{position:sticky;bottom:-18px;display:flex;justify-content:flex-end;gap:8px;
   .calendar-date-button b{font-size:8px}
   .calendar-weekdays span{padding:7px 2px;font-size:8px}
 }
+
+/* v3.2 — MOM structured editor */
+dialog.mom-dialog{width:min(1040px,calc(100% - 18px))}
+.mom-editor,.mom-view{display:grid;gap:16px}
+.mom-section-head{align-items:flex-end;gap:12px}
+.mom-section-head h3,.mom-view-section h3{margin:0;font-size:18px;letter-spacing:-.025em}
+.mom-section-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}
+.mom-pair-list,.mom-action-list,.mom-file-list,.mom-action-summary{display:grid;gap:10px}
+.mom-pair-row{position:relative;display:grid;grid-template-columns:1fr;gap:10px;border:1px solid var(--line-strong);border-radius:10px;padding:12px}
+.mom-pair-row textarea{min-height:92px}
+.mom-row-remove{justify-self:end;align-self:end;min-width:42px}
+.mom-client-request textarea{min-height:100px}
+.mom-action-row{display:grid;grid-template-columns:1fr;gap:10px;border:1px solid var(--line-strong);border-radius:10px;padding:12px;align-items:end}
+.mom-action-name input{min-height:46px}
+.mom-pic-field{display:grid;gap:7px}
+.mom-pic-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.check-card.compact{padding:8px;font-size:11px;border-radius:7px}
+.check-card.compact input{width:17px;height:17px}
+.mom-file-input-row{display:grid;grid-template-columns:1fr;gap:10px;border:1px solid var(--line-strong);border-radius:10px;padding:12px;align-items:end}
+.mom-file-input-row .full{grid-column:1/-1}
+.field-hint{font-weight:500;color:var(--muted);font-size:10px}
+.mom-existing-file{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--line-strong);border-radius:10px;padding:12px}
+.mom-existing-file.marked-delete{opacity:.48;text-decoration:line-through}
+.mom-file-card{display:grid;gap:4px;border:1px solid var(--line-strong);border-radius:10px;padding:12px;color:var(--black);text-decoration:none}
+.mom-file-card:hover{background:var(--yellow)}
+.mom-file-card span{font-size:11px;color:var(--muted)}
+.mom-meta-strip{display:flex;flex-wrap:wrap;gap:8px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.mom-meta-strip span{font-size:11px;font-weight:800;border:1px solid var(--line-strong);border-radius:999px;padding:6px 9px}
+.mom-view-section{display:grid;gap:10px}
+.mom-pair-row.view{background:var(--white)}
+.mom-pair-row.view p{margin:7px 0 0;white-space:pre-wrap;line-height:1.55}
+.mom-action-card{border:1px solid var(--line-strong);border-radius:10px;padding:12px;display:grid;gap:5px}
+.mom-manage-actions{position:sticky;bottom:-18px;display:flex;justify-content:flex-end;gap:8px;margin:0 -18px -18px;padding:14px 18px;background:var(--white);border-top:1px solid var(--line)}
+.btn.danger-outline{background:var(--white);border-color:var(--black);text-decoration:underline;text-underline-offset:3px}
+.btn.danger-outline:hover{background:var(--black);color:var(--white)}
+
+@media (min-width:768px){
+  .mom-pair-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;align-items:end}
+  .mom-pair-row.view{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .mom-action-row{grid-template-columns:minmax(220px,1.35fr) minmax(280px,1fr) minmax(150px,.55fr) auto}
+  .mom-file-input-row{grid-template-columns:minmax(180px,.7fr) minmax(300px,1.3fr) auto}
+  .mom-pic-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (min-width:1200px){
+  .mom-pic-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}

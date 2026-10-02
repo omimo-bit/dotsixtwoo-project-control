@@ -1,4 +1,4 @@
-const CACHE='dotsixtwoo-v31-executive-calendar-20261002';
+const CACHE='dotsixtwoo-v32-mom-workspace-20261002';
 const ASSETS=['./','./index.html','./css/style.css','./js/config.js','./js/api.js','./js/app.js','./js/push-config.js','./js/push.js','./manifest.json','./assets/logo.png','./assets/icons/icon-192.png','./assets/icons/icon-512.png'];
 
 // Existing offline/PWA behavior remains intact. Push is an additive layer.
