@@ -15,98 +15,203 @@
 <body>
   <div id="offlineBar" class="offline hidden">OFFLINE — perubahan belum dikirim ke server.</div>
   <div id="toast" class="toast hidden"></div>
+
   <div id="app">
     <section id="loginView" class="center-page">
-      <div class="auth-card">
-        <img src="assets/logo.png" alt="DOTSIXTWOO" class="logo login-logo">
-        <div class="eyebrow">DOTSIXTWOO</div>
-        <h1>Project Control Center</h1>
-        <p class="muted">Satu tempat untuk project, task, meeting, MOM, dan budget.</p>
-        <form id="loginForm">
-          <label>Email<input id="email" type="email" required autocomplete="username"></label>
-          <label>Password<input id="password" type="password" required autocomplete="current-password"></label>
-          <button class="btn primary" type="submit">Masuk</button>
-          <p id="loginMsg" class="msg"></p>
-        </form>
+      <div class="auth-shell">
+        <div class="auth-brand">
+          <img src="assets/logo.png" alt="DOTSIXTWOO" class="login-logo">
+          <div class="auth-brand-copy">
+            <span class="eyebrow">DOTSIXTWOO</span>
+            <h1>Project Control<br>Center</h1>
+            <p>Satu sumber informasi untuk project, task, meeting, MOM, schedule, dan budget.</p>
+          </div>
+        </div>
+        <div class="auth-card">
+          <div class="auth-title">
+            <span class="eyebrow">INTERNAL ACCESS</span>
+            <h2>Masuk ke workspace</h2>
+            <p class="muted">Gunakan akun yang sudah terdaftar.</p>
+          </div>
+          <form id="loginForm" class="auth-form">
+            <label>Email<input id="email" type="email" required autocomplete="username" placeholder="nama@perusahaan.com"></label>
+            <label>Password<input id="password" type="password" required autocomplete="current-password" placeholder="••••••••"></label>
+            <button class="btn primary full" type="submit">Masuk</button>
+            <p id="loginMsg" class="msg"></p>
+          </form>
+        </div>
       </div>
     </section>
 
-    <section id="mainView" class="hidden">
-      <header class="topbar">
-        <div class="brand-row compact">
-          <img src="assets/logo.png" alt="DOTSIXTWOO" class="logo small">
-          <div><strong>DOTSIXTWOO</strong><span id="userRole" class="muted tiny"></span></div>
+    <section id="mainView" class="hidden app-shell">
+      <aside class="sidebar app-nav" aria-label="Navigasi utama">
+        <div class="sidebar-brand">
+          <img src="assets/logo.png" alt="DOTSIXTWOO" class="sidebar-logo">
+          <div class="sidebar-brand-copy"><strong>DOTSIXTWOO</strong><span>PROJECT CONTROL</span></div>
         </div>
-        <div class="top-actions"><button id="notifBtn" class="btn ghost">Notif <span id="notifCount" class="count">0</span></button><button id="logoutBtn" class="btn ghost">Keluar</button></div>
-      </header>
+        <nav class="sidebar-nav">
+          <button data-go="home" class="active"><span class="nav-mark">01</span><span class="nav-label">Overview</span></button>
+          <button data-go="projects"><span class="nav-mark">02</span><span class="nav-label">Projects</span></button>
+          <button data-go="tasks"><span class="nav-mark">03</span><span class="nav-label">Tasks</span></button>
+          <button data-go="meetings"><span class="nav-mark">04</span><span class="nav-label">Meetings</span></button>
+          <button data-go="schedule"><span class="nav-mark">05</span><span class="nav-label">Schedule</span></button>
+          <button data-go="budget"><span class="nav-mark">06</span><span class="nav-label">Budget</span></button>
+          <button data-go="workload" id="sidebarWorkload"><span class="nav-mark">07</span><span class="nav-label">Workload</span></button>
+          <button data-go="notifications"><span class="nav-mark">08</span><span class="nav-label">Notifications</span></button>
+          <button data-go="activity"><span class="nav-mark">09</span><span class="nav-label">Activity</span></button>
+          <button data-go="more"><span class="nav-mark">10</span><span class="nav-label">More</span></button>
+        </nav>
+        <div class="sidebar-user">
+          <div class="avatar" id="sidebarAvatar">D2</div>
+          <div class="sidebar-user-copy"><strong id="sidebarUserName">User</strong><span id="sidebarUserRole">Role</span></div>
+        </div>
+      </aside>
 
-      <main class="content">
-        <section data-page="home" class="page active">
-          <div class="welcome"><h2 id="welcomeText">Halo</h2><p class="muted">Yang perlu kamu tahu hari ini.</p></div>
-          <div id="metrics" class="metric-grid"></div>
-          <div class="section-head"><h3>Task Saya</h3><button class="btn small" data-go="tasks">Lihat semua</button></div>
-          <div id="homeTasks" class="stack"></div>
-          <div class="section-head"><h3>Meeting Hari Ini</h3><button class="btn small" data-go="meetings">Lihat semua</button></div>
-          <div id="todayMeetings" class="stack"></div>
-        </section>
-
-        <section data-page="projects" class="page">
-          <div class="section-head"><h2>Projects</h2><button id="newProjectBtn" class="btn primary small">+ Project</button></div>
-          <input id="projectSearch" class="search" placeholder="Cari project / client / brand...">
-          <div class="chips" id="projectFilters"></div>
-          <div id="projectList" class="stack"></div>
-        </section>
-
-        <section data-page="projectDetail" class="page">
-          <div class="section-head"><button class="btn small" data-go="projects">← Projects</button><button id="editProjectBtn" class="btn primary small">Edit</button></div>
-          <div id="projectDetail"></div>
-        </section>
-
-        <section data-page="tasks" class="page">
-          <div class="section-head"><h2>My Tasks</h2><button id="newTaskBtn" class="btn primary small">+ Task</button></div>
-          <div class="chips" id="taskFilters"></div>
-          <div id="taskList" class="stack"></div>
-        </section>
-
-        <section data-page="meetings" class="page">
-          <div class="section-head"><h2>Meeting & MOM</h2><button id="newMeetingBtn" class="btn primary small">+ Meeting</button></div>
-          <div class="chips" id="meetingFilters"></div>
-          <div id="meetingList" class="stack"></div>
-        </section>
-
-        <section data-page="more" class="page">
-          <h2>More</h2>
-          <div class="menu-card">
-            <button data-go="budget">Budget</button>
-            <button data-go="daily">Daily Update</button>
-            <button data-go="notifications">Notifications</button>
-            <button data-go="activity">Activity Log</button>
-            <button data-go="workload" id="workloadMenuBtn">Workload</button>
-            <button data-go="schedule">Alfa's Schedule</button>
-            <button data-go="users" id="usersMenuBtn">Users</button>
-            <button id="changePasswordBtn">Change Password</button>
+      <div class="workspace">
+        <header class="topbar">
+          <div class="mobile-brand">
+            <img src="assets/logo.png" alt="DOTSIXTWOO" class="logo small">
+            <div><strong>DOTSIXTWOO</strong><span id="userRole" class="muted tiny"></span></div>
           </div>
-        </section>
+          <div class="page-context">
+            <span id="todayLabel" class="eyebrow">TODAY</span>
+            <strong id="currentPageTitle">Overview</strong>
+          </div>
+          <div class="top-actions">
+            <button id="refreshBtn" class="btn ghost compact-btn" type="button">Refresh</button>
+            <button id="notifBtn" class="btn ghost compact-btn" type="button">Notif <span id="notifCount" class="count">0</span></button>
+            <button id="logoutBtn" class="btn ghost compact-btn" type="button">Keluar</button>
+          </div>
+        </header>
 
-        <section data-page="budget" class="page"><div class="section-head"><h2>Budget</h2><button id="newBudgetBtn" class="btn primary small">+ Update</button></div><div id="budgetSummary" class="metric-grid compact-grid"></div><div id="budgetList" class="stack"></div></section>
-        <section data-page="daily" class="page"><div class="section-head"><h2>Daily Update</h2><button id="newDailyBtn" class="btn primary small">+ Update</button></div><div id="dailyList" class="stack"></div></section>
-        <section data-page="notifications" class="page"><div class="section-head"><h2>Notifications</h2><button class="btn small" data-go="more">Kembali</button></div><div id="notificationList" class="stack"></div></section>
-        <section data-page="activity" class="page"><div class="section-head"><h2>Activity Log</h2><button class="btn small" data-go="more">Kembali</button></div><div id="activityList" class="stack"></div></section>
-        <section data-page="workload" class="page"><div class="section-head"><div><h2>Workload</h2><p class="muted">Task aktif per personal.</p></div><button class="btn small" data-go="more">Kembali</button></div><div id="workloadSummary" class="metric-grid compact-grid"></div><div class="chips" id="workloadFilters"></div><input id="workloadSearch" class="search" placeholder="Cari nama / role..."><div id="workloadList" class="stack"></div></section>
-        <section data-page="workloadDetail" class="page"><div class="section-head"><button class="btn small" data-go="workload">← Workload</button><span></span></div><div id="workloadDetail"></div></section>
-        <section data-page="schedule" class="page"><div class="section-head"><h2>Alfa's Schedule</h2><button class="btn small" data-go="more">Kembali</button></div><div class="chips" id="scheduleFilters"></div><div id="scheduleList" class="stack"></div></section>
-        <section data-page="users" class="page"><div class="section-head"><h2>Users</h2><button id="newUserBtn" class="btn primary small">+ User</button></div><div id="userList" class="stack"></div></section>
-      </main>
+        <main class="content">
+          <section data-page="home" class="page active">
+            <div class="home-intro">
+              <div>
+                <span class="eyebrow" id="homeRoleLabel">WORKSPACE</span>
+                <h1 id="welcomeText">Halo</h1>
+                <p id="homeSubtitle" class="muted">Yang perlu kamu ketahui dan lakukan hari ini.</p>
+              </div>
+              <div class="quick-actions" id="homeQuickActions">
+                <button class="btn primary manage-only" data-quick="task">+ Task</button>
+                <button class="btn manage-only" data-quick="meeting">+ Meeting</button>
+                <button class="btn" data-quick="daily">Daily Update</button>
+              </div>
+            </div>
 
-      <nav class="bottom-nav">
-        <button data-go="home" class="active">Home</button><button data-go="projects">Projects</button><button data-go="tasks">Tasks</button><button data-go="meetings">Meeting</button><button data-go="more">More</button>
+            <div id="metrics" class="metric-strip"></div>
+
+            <div class="dashboard-grid">
+              <section class="dashboard-panel attention-panel" id="homeAttentionPanel">
+                <div class="panel-head"><div><span class="eyebrow">PRIORITY</span><h2>Action Required</h2></div><span id="attentionCount" class="counter-badge">0</span></div>
+                <div id="homeAttention" class="attention-list"></div>
+              </section>
+
+              <section class="dashboard-panel schedule-panel">
+                <div class="panel-head"><div><span class="eyebrow">TODAY</span><h2>Schedule</h2></div><button class="text-action" data-go="meetings">All meetings →</button></div>
+                <div id="todayMeetings" class="timeline-list"></div>
+              </section>
+
+              <section class="dashboard-panel tasks-panel">
+                <div class="panel-head"><div><span class="eyebrow">EXECUTION</span><h2 id="homeTaskHeading">My Tasks</h2></div><button class="text-action" data-go="tasks">View tasks →</button></div>
+                <div id="homeTasks" class="compact-list"></div>
+              </section>
+
+              <section class="dashboard-panel projects-panel" id="homeProjectsPanel">
+                <div class="panel-head"><div><span class="eyebrow">PIPELINE</span><h2>Project Pulse</h2></div><button class="text-action" data-go="projects">View projects →</button></div>
+                <div id="homeProjects" class="compact-list"></div>
+              </section>
+
+              <section class="dashboard-panel budget-panel" id="homeBudgetPanel">
+                <div class="panel-head"><div><span class="eyebrow">CONTROL</span><h2>Budget Snapshot</h2></div><button class="text-action" data-go="budget">View budget →</button></div>
+                <div id="homeBudget" class="budget-snapshot"></div>
+              </section>
+
+              <section class="dashboard-panel workload-panel" id="homeWorkloadPanel">
+                <div class="panel-head"><div><span class="eyebrow">TEAM</span><h2>Workload</h2></div><button class="text-action" data-go="workload">View workload →</button></div>
+                <div id="homeWorkload" class="workload-compact"></div>
+              </section>
+            </div>
+          </section>
+
+          <section data-page="projects" class="page">
+            <div class="page-head"><div><span class="eyebrow">PROJECTS</span><h1>Project Control</h1><p class="muted">Pipeline, progress, PM, deadline, dan status project.</p></div><button id="newProjectBtn" class="btn primary">+ Project</button></div>
+            <div class="filter-bar"><input id="projectSearch" class="search" placeholder="Cari project / client / brand..."><div class="chips" id="projectFilters"></div></div>
+            <div class="desktop-table-head project-table-head"><span>Project</span><span>PM</span><span>Status</span><span>Progress</span><span>Next / Timeline</span></div>
+            <div id="projectList" class="responsive-list"></div>
+          </section>
+
+          <section data-page="projectDetail" class="page">
+            <div class="page-head compact-page-head"><button class="btn" data-go="projects">← Projects</button><button id="editProjectBtn" class="btn primary">Edit Project</button></div>
+            <div id="projectDetail"></div>
+          </section>
+
+          <section data-page="tasks" class="page">
+            <div class="page-head"><div><span class="eyebrow">TASKS</span><h1>My Tasks</h1><p class="muted">Fokus pada deadline, next action, dan blocker.</p></div><button id="newTaskBtn" class="btn primary">+ Task</button></div>
+            <div class="chips sticky-chips" id="taskFilters"></div>
+            <div class="desktop-table-head task-table-head"><span>Task</span><span>PIC</span><span>Deadline</span><span>Status</span><span>Progress</span><span>Action</span></div>
+            <div id="taskList" class="responsive-list"></div>
+          </section>
+
+          <section data-page="meetings" class="page">
+            <div class="page-head"><div><span class="eyebrow">MEETINGS</span><h1>Meeting & MOM</h1><p class="muted">Agenda, peserta, keputusan, dan tindak lanjut.</p></div><button id="newMeetingBtn" class="btn primary">+ Meeting</button></div>
+            <div class="chips sticky-chips" id="meetingFilters"></div>
+            <div id="meetingList" class="meeting-agenda"></div>
+          </section>
+
+          <section data-page="more" class="page">
+            <div class="page-head"><div><span class="eyebrow">SYSTEM</span><h1>More</h1><p class="muted">Tools tambahan dan pengaturan operasional.</p></div></div>
+            <div class="more-grid menu-card">
+              <button data-go="budget"><strong>Budget</strong><span>Approved, planned, actual</span></button>
+              <button data-go="daily"><strong>Daily Update</strong><span>Update pekerjaan harian</span></button>
+              <button data-go="notifications"><strong>Notifications</strong><span>Update dan alert</span></button>
+              <button data-go="activity"><strong>Activity Log</strong><span>Riwayat perubahan</span></button>
+              <button data-go="workload" id="workloadMenuBtn"><strong>Workload</strong><span>Beban kerja team</span></button>
+              <button data-go="schedule"><strong>Alfa's Schedule</strong><span>Agenda Pak Alfa</span></button>
+              <button data-go="users" id="usersMenuBtn"><strong>Users</strong><span>Akses dan role</span></button>
+              <button id="changePasswordBtn"><strong>Change Password</strong><span>Keamanan akun</span></button>
+            </div>
+          </section>
+
+          <section data-page="budget" class="page"><div class="page-head"><div><span class="eyebrow">FINANCIAL CONTROL</span><h1>Budget</h1><p class="muted">Approved vs planned vs actual secara real-time.</p></div><button id="newBudgetBtn" class="btn primary">+ Update</button></div><div id="budgetSummary" class="metric-strip compact-metrics"></div><div id="budgetList" class="responsive-list"></div></section>
+          <section data-page="daily" class="page"><div class="page-head"><div><span class="eyebrow">DAILY</span><h1>Daily Update</h1><p class="muted">Apa yang dikerjakan, next action, dan blocker.</p></div><button id="newDailyBtn" class="btn primary">+ Update</button></div><div id="dailyList" class="activity-stream"></div></section>
+          <section data-page="notifications" class="page"><div class="page-head"><div><span class="eyebrow">ALERTS</span><h1>Notifications</h1></div><button class="btn" data-go="more">Kembali</button></div><div id="pushControl"></div><div id="notificationList" class="notification-stream"></div></section>
+          <section data-page="activity" class="page"><div class="page-head"><div><span class="eyebrow">AUDIT TRAIL</span><h1>Activity Log</h1></div><button class="btn" data-go="more">Kembali</button></div><div id="activityList" class="activity-stream"></div></section>
+          <section data-page="workload" class="page"><div class="page-head"><div><span class="eyebrow">TEAM CONTROL</span><h1>Workload</h1><p class="muted">Task aktif, overdue, dan blocked per personal.</p></div><button class="btn" data-go="more">Kembali</button></div><div id="workloadSummary" class="metric-strip compact-metrics"></div><div class="filter-bar"><div class="chips" id="workloadFilters"></div><input id="workloadSearch" class="search" placeholder="Cari nama / role..."></div><div id="workloadList" class="workload-grid"></div></section>
+          <section data-page="workloadDetail" class="page"><div class="page-head compact-page-head"><button class="btn" data-go="workload">← Workload</button></div><div id="workloadDetail"></div></section>
+          <section data-page="schedule" class="page"><div class="page-head"><div><span class="eyebrow">EXECUTIVE CALENDAR</span><h1>Alfa's Schedule</h1><p class="muted">Agenda yang membutuhkan Pak Alfa.</p></div><button class="btn" data-go="more">Kembali</button></div><div class="chips sticky-chips" id="scheduleFilters"></div><div id="scheduleList" class="meeting-agenda"></div></section>
+          <section data-page="users" class="page"><div class="page-head"><div><span class="eyebrow">ACCESS CONTROL</span><h1>Users</h1></div><button id="newUserBtn" class="btn primary">+ User</button></div><div id="userList" class="user-grid"></div></section>
+        </main>
+      </div>
+
+      <nav class="bottom-nav app-nav" aria-label="Navigasi mobile">
+        <button data-go="home" class="active"><span>Home</span></button>
+        <button data-go="projects"><span>Projects</span></button>
+        <button data-go="tasks"><span>Tasks</span></button>
+        <button data-go="meetings"><span>Meeting</span></button>
+        <button data-go="more"><span>More</span></button>
       </nav>
+
+      <div class="mobile-fab-wrap">
+        <button class="mobile-fab" id="mobileFab" type="button" aria-label="Quick action">+</button>
+        <div class="fab-menu hidden" id="fabMenu">
+          <button data-quick="task" class="manage-only">Task</button>
+          <button data-quick="meeting" class="manage-only">Meeting</button>
+          <button data-quick="daily">Daily Update</button>
+          <button data-quick="project" class="manage-only">Project</button>
+        </div>
+      </div>
     </section>
   </div>
 
-  <dialog id="modal"><form method="dialog" id="modalForm" class="modal-card"><div class="section-head"><h3 id="modalTitle">Form</h3><button type="button" data-modal-close class="btn ghost icon-btn" aria-label="Tutup">✕</button></div><div id="modalBody"></div><menu><button type="button" data-modal-close class="btn ghost">Batal</button><button id="modalSave" type="submit" class="btn primary">Simpan</button></menu></form></dialog>
+  <dialog id="modal"><form method="dialog" id="modalForm" class="modal-card"><div class="modal-head"><div><span class="eyebrow">DOTSIXTWOO</span><h3 id="modalTitle">Form</h3></div><button type="button" data-modal-close class="btn ghost icon-btn" aria-label="Tutup">✕</button></div><div id="modalBody"></div><menu><button type="button" data-modal-close class="btn ghost">Batal</button><button id="modalSave" type="submit" class="btn primary">Simpan</button></menu></form></dialog>
 
-  <script src="js/config.js"></script><script src="js/api.js"></script><script src="js/app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js"></script><script src="js/push-config.js"></script><script src="js/push.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js"></script>
+  <script src="js/push-config.js"></script>
+  <script src="js/push.js"></script>
 </body>
 </html>
